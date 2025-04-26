@@ -1,12 +1,57 @@
-# React + Vite
+# 🪺 HabitNest
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**HabitNest** is a minimalist React application that helps you build and maintain a healthy morning routine. Start your day strong with simple habits like waking up early, meditating, and planning ahead. 🌞
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📸 Preview
 
-## Expanding the ESLint configuration
+![HabitNest Screenshot](./React_Project_2.png)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+![HabitNest Screenshot Checked](./React_Project_3.png)
+
+---
+
+## 🚀 Features
+- 🖥️ Clean and responsive design
+- 📋 Simple list of daily habits
+- 🌗 Dark-themed interface
+- ⚡ Built with lightweight React setup (no backend)
+
+---
+
+## 🛠️ Built With
+- [React.js](https://react.dev/)
+- [Vite](https://vitejs.dev/)
+- HTML5 + CSS3
+- JavaScript (ES6+)
+
+---
+
+## 📂 Installation and Setup
+
+First, clone the repository:
+
+```bash
+git clone https://github.com/saurin1004/HabitNest.git
+cd HabitNest
+```
+
+Install the project dependencies:
+```bash
+npm install
+```
+
+Start the development server:
+```bash
+npm run dev
+```
+
+## 🌟 About
+HabitNest is built around the idea that small, consistent actions create massive long-term results.
+Start your mornings intentionally, track simple positive habits, and set a strong tone for your entire day.
+
+## 📜 License
+This project is licensed under the MIT License.
+
+## Made by Saurin Anilkumar Prajapati
