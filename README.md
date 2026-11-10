@@ -4,7 +4,7 @@
 
 **[Live demo →](https://saurin1004.github.io/HabitNest/)**
 
-![HabitNest screenshot](docs/screenshot.png)
+![HabitNest screenshot](docs/habitnest-app.png)
 
 ## Features
 
