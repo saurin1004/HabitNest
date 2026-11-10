@@ -1,92 +1,383 @@
+:root {
+  --bg: #fbf7f1;
+  --card: #ffffff;
+  --ink: #2b2620;
+  --muted: #8a8177;
+  --line: #ece4d8;
+  --accent: #e8743b;
+  --accent-soft: #fde9dd;
+  --done: #3f9d6b;
+  --done-soft: #e2f3e9;
+  --radius: 16px;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #17140f;
+    --card: #211d17;
+    --ink: #f3ece2;
+    --muted: #a39887;
+    --line: #342e25;
+    --accent: #f08a52;
+    --accent-soft: #3a2619;
+    --done: #5fc08b;
+    --done-soft: #1f3328;
+    color-scheme: dark;
+  }
+}
+
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 body {
-    margin: 0;
-    font-family: Inter, sans-serif;
-    background-color: #282D35;
-    color: white;
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-header {
-    height: 90px;
-    background-color: #21222A;
-    padding: 30px 25px;
+button,
+input {
+  font: inherit;
+  color: inherit;
 }
 
-nav {
-    display: flex;
-    align-items: center;
-    height: 100%;
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
-nav > img {
-    width: 40px;
-    margin-right: 7px;
+.app {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 28px 16px 48px;
 }
 
-nav > span {
-    color: #61DAFB;
-    font-size: 1.4rem;
+/* Header */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+.brand-mark {
+  font-size: 1.4rem;
+}
+.today {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin: 28px 0 24px;
+}
+.today-label {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+.today-date {
+  margin: 4px 0 6px;
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  letter-spacing: -0.02em;
+}
+.today-sub {
+  margin: 0;
+  color: var(--muted);
 }
 
-main {
-    padding: 60px 30px;
-    background-image: url("./assets/react-logo-half.png");
-    background-repeat: no-repeat;
-    background-position: right 70%;
+.ring {
+  position: relative;
+  flex: none;
+  width: 64px;
+  height: 64px;
+}
+.ring svg {
+  transform: rotate(-90deg);
+}
+.ring circle {
+  fill: none;
+  stroke-width: 6;
+}
+.ring-track {
+  stroke: var(--line);
+}
+.ring-fill {
+  stroke: var(--done);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.4s ease;
+}
+.ring-label {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 0.9rem;
 }
 
-main > h1 {
-    margin: 0;
-    font-size: 2.4rem;
+/* Card */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 8px 8px 16px;
+}
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px 12px 4px;
+}
+.card-head h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+.hint {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 16px 12px;
+  margin: 0;
 }
 
-.habits-list {
-    margin-top: 46px;
-    max-width: 400px;
+/* Habit rows */
+.habits {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.habit {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 12px;
+}
+.habit + .habit {
+  border-top: 1px solid var(--line);
+}
+.habit:hover .actions {
+  opacity: 1;
 }
 
-.habits-list > li {
-    padding-block: 10px;
-    line-height: 19px;
+.check {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  background: transparent;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+.check:active {
+  transform: scale(0.92);
+}
+.check svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: transparent;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.habit.is-done .check {
+  background: var(--done);
+  border-color: var(--done);
+}
+.habit.is-done .check svg {
+  stroke: #fff;
 }
 
-.habits-list >li::marker {
-    color: #61DAFB;
-    font-size: 1.5rem;
+.habit-main {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.habit-name {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.habit.is-done .habit-name {
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-color: var(--done);
+}
+.habit-edit {
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  padding: 4px 8px;
+  background: var(--bg);
+  font-weight: 600;
+  width: 100%;
+}
+.habit-meta {
+  display: flex;
+  gap: 10px;
+  font-size: 0.8rem;
+}
+.streak {
+  color: var(--accent);
+  font-weight: 600;
+}
+.muted {
+  color: var(--muted);
+  font-weight: 400;
 }
 
-.habit-list {
-    list-style-type: none;
-    padding: 0;
+.week {
+  display: flex;
+  gap: 4px;
+}
+.day {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+.day.on {
+  background: var(--done-soft);
+  border-color: var(--done);
+  color: var(--done);
+}
+.day.is-today {
+  box-shadow: 0 0 0 2px var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.actions {
+  display: flex;
+  gap: 2px;
+  opacity: 0.35;
+  transition: opacity 0.15s ease;
+}
+.icon {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.icon:hover {
+  background: var(--bg);
+  color: var(--ink);
+}
+.icon.danger:hover {
+  color: #d64545;
+}
+
+/* Add form */
+.add {
+  display: flex;
+  gap: 8px;
+  margin: 8px 12px 0;
+}
+.add input {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 14px;
+  border-radius: 12px;
+  border: 1px dashed var(--line);
+  background: var(--bg);
+}
+.add input:focus {
+  outline: none;
+  border-style: solid;
+  border-color: var(--accent);
+}
+.add button {
+  padding: 0 18px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+.add button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* Stats */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+}
+.stat {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.stat-label {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.footer {
+  margin-top: 28px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.footer a {
+  color: inherit;
+}
+
+/* Small screens: put the week row under the habit name */
+@media (max-width: 560px) {
+  .habit {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    row-gap: 10px;
   }
-  
-  .habit-item {
-    margin-bottom: 12px;
-    font-size: 18px;
+  .week {
+    grid-column: 2 / -1;
+    grid-row: 2;
   }
-  
-  .habit-label {
-    cursor: pointer;
+  .actions {
+    opacity: 1;
   }
-  
-  .habit-checkbox {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 20px;
-    height: 10px;
-    border: 2px solid #61dafb;
-    border-radius: 5px;
-    margin-right: 12px;
-    position: relative;
-    cursor: pointer;
-    transition: all 0.2s ease;
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
   }
-  
-  /* Crossed text for completed habits */
-  .completed {
-    text-decoration: line-through;
-    color: #888;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
   }
+}

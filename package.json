@@ -1,13 +1,17 @@
 {
-  "name": "react-facts",
+  "name": "habitnest",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "A morning-habit tracker with streaks, 7-day history and local persistence.",
+  "author": "Saurin Prajapati",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "preview": "vite preview",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "test": "vitest run"
   },
   "dependencies": {
     "react": "^19.0.0",
@@ -22,6 +26,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
-    "vite": "^6.3.1"
+    "vite": "^6.3.1",
+    "vitest": "^3.2.7"
   }
 }
