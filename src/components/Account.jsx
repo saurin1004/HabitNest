@@ -166,7 +166,7 @@ function AccountMenu({ user, sync, onClose }) {
 
   return (
     <div className="menu" ref={ref} role="menu">
-      <p className="menu-email">{user.email}</p>
+      <p className="menu-email" title={user.email}>{user.email}</p>
       {syncText && <p className={`menu-sync ${sync}`}>{syncText}</p>}
       <button type="button" role="menuitem" onClick={async () => (await loadCloud()).logOut()}>
         Sign out

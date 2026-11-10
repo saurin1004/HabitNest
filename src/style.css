@@ -483,7 +483,9 @@ input {
 .menu-email {
   margin: 6px 8px 2px;
   font-weight: 600;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .menu-sync {
   margin: 0 8px 8px;
