@@ -1,3 +1,14 @@
+import {
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  TouchSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { restrictToParentElement, restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import Header from "./components/Header.jsx";
 import HabitRow from "./components/HabitRow.jsx";
 import AddHabit from "./components/AddHabit.jsx";
@@ -10,7 +21,20 @@ export default function App() {
   const today = useToday();
   const account = useAccount();
   const uid = account.status === "signed-in" ? account.user.uid : null;
-  const { habits, sync, addHabit, renameHabit, removeHabit, toggleDay } = useHabits(uid);
+  const { habits, sync, addHabit, renameHabit, removeHabit, toggleDay, moveHabit } = useHabits(uid);
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 150, tolerance: 6 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
+  const nameOf = (id) => habits.find((h) => h.id === id)?.name ?? "habit";
+  const position = (id) => habits.findIndex((h) => h.id === id) + 1;
+  const announcements = {
+    onDragStart: ({ active }) => `Picked up ${nameOf(active.id)}. Use the arrow keys to move it, space to drop.`,
+    onDragOver: ({ active, over }) => (over ? `${nameOf(active.id)} is now at position ${position(over.id)} of ${habits.length}.` : undefined),
+    onDragEnd: ({ active, over }) => (over ? `Dropped ${nameOf(active.id)} at position ${position(over.id)}.` : `Dropped ${nameOf(active.id)}.`),
+    onDragCancel: ({ active }) => `Cancelled. ${nameOf(active.id)} went back to where it was.`,
+  };
   const doneToday = habits.filter((h) => h.completions.includes(today)).length;
 
   return (
@@ -26,25 +50,35 @@ export default function App() {
       <main>
         <section className="card">
           <div className="card-head">
-            <h2>Morning routine</h2>
-            <span className="hint">Tap a day to fill in past check-ins</span>
+            <h2>Daily routine</h2>
+            <span className="hint">Drag ⠿ to reorder · tap a day to fill in past check-ins</span>
           </div>
 
           {habits.length === 0 ? (
             <p className="empty">No habits yet. Add your first one below.</p>
           ) : (
-            <ul className="habits">
-              {habits.map((h) => (
-                <HabitRow
-                  key={h.id}
-                  habit={h}
-                  today={today}
-                  onToggle={toggleDay}
-                  onRename={renameHabit}
-                  onRemove={removeHabit}
-                />
-              ))}
-            </ul>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+              accessibility={{ announcements }}
+              onDragEnd={({ active, over }) => over && moveHabit(active.id, over.id)}
+            >
+              <SortableContext items={habits.map((h) => h.id)} strategy={verticalListSortingStrategy}>
+                <ul className="habits">
+                  {habits.map((h) => (
+                    <HabitRow
+                      key={h.id}
+                      habit={h}
+                      today={today}
+                      onToggle={toggleDay}
+                      onRename={renameHabit}
+                      onRemove={removeHabit}
+                    />
+                  ))}
+                </ul>
+              </SortableContext>
+            </DndContext>
           )}
 
           <AddHabit onAdd={addHabit} />

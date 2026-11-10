@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { lastNDays, weekdayShort, longDate } from "../lib/dates.js";
 import { bestStreak, currentStreak } from "../lib/streaks.js";
 
@@ -9,6 +11,9 @@ export default function HabitRow({ habit, today, onToggle, onRename, onRemove })
   const streak = currentStreak(habit.completions, today);
   const best = bestStreak(habit.completions);
   const week = lastNDays(today, 7);
+  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } =
+    useSortable({ id: habit.id });
+  const style = { transform: CSS.Transform.toString(transform), transition };
 
   const save = () => {
     if (draft.trim()) onRename(habit.id, draft);
@@ -17,7 +22,22 @@ export default function HabitRow({ habit, today, onToggle, onRename, onRemove })
   };
 
   return (
-    <li className={`habit ${doneToday ? "is-done" : ""}`}>
+    <li
+      ref={setNodeRef}
+      style={style}
+      className={`habit ${doneToday ? "is-done" : ""} ${isDragging ? "is-dragging" : ""}`}
+    >
+      <button
+        type="button"
+        className="handle"
+        ref={setActivatorNodeRef}
+        aria-label={`Reorder "${habit.name}"`}
+        title="Drag to reorder"
+        {...attributes}
+        {...listeners}
+      >
+        ⠿
+      </button>
       <button
         type="button"
         className="check"

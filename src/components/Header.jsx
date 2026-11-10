@@ -44,7 +44,7 @@ export default function Header({ today, doneToday, total, accountSlot }) {
               ? "Add a habit to get started."
               : allDone
               ? "Every habit done. Great start to the day."
-              : `${total - doneToday} to go. Small steps, every morning.`}
+              : `${total - doneToday} to go. Small steps, every day.`}
           </p>
         </div>
         <ProgressRing done={doneToday} total={total} />

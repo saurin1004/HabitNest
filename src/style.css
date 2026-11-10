@@ -159,7 +159,7 @@ input {
 }
 .habit {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  grid-template-columns: auto auto minmax(0, 1fr) auto auto;
   align-items: center;
   gap: 12px;
   padding: 12px;
@@ -361,11 +361,11 @@ input {
 /* Small screens: put the week row under the habit name */
 @media (max-width: 560px) {
   .habit {
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
     row-gap: 10px;
   }
   .week {
-    grid-column: 2 / -1;
+    grid-column: 3 / -1;
     grid-row: 2;
   }
   .actions {
@@ -605,4 +605,40 @@ input {
   display: flex;
   gap: 14px;
   align-items: center;
+}
+
+/* Drag to reorder */
+.habit {
+  position: relative;
+  background: var(--card);
+}
+.handle {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1.1rem;
+  line-height: 1;
+  width: 22px;
+  height: 30px;
+  padding: 0;
+  border-radius: 6px;
+  cursor: grab;
+  touch-action: none;
+  opacity: 0.55;
+}
+.handle:hover,
+.handle:focus-visible {
+  opacity: 1;
+  color: var(--ink);
+  background: var(--bg);
+}
+.habit.is-dragging {
+  z-index: 2;
+  cursor: grabbing;
+  box-shadow: 0 12px 28px -12px rgba(0, 0, 0, 0.35);
+  border-radius: 12px;
+}
+.habit.is-dragging .handle {
+  cursor: grabbing;
+  opacity: 1;
 }

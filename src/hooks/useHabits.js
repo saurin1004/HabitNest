@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { clearGuestHabits, loadHabits, makeHabit, saveHabits, DEFAULT_HABITS } from "../lib/storage.js";
 import { isPristine, mergeHabits } from "../lib/merge.js";
 import { toDateKey } from "../lib/dates.js";
+import { moveById } from "../lib/order.js";
 import { loadCloud } from "./useAccount.js";
 
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
@@ -101,6 +102,10 @@ export function useHabits(uid) {
     setHabits((hs) => hs.filter((h) => h.id !== id));
   }, []);
 
+  const moveHabit = useCallback((activeId, overId) => {
+    setHabits((hs) => moveById(hs, activeId, overId));
+  }, []);
+
   const toggleDay = useCallback((id, dateKey) => {
     setHabits((hs) =>
       hs.map((h) => {
@@ -116,7 +121,7 @@ export function useHabits(uid) {
     );
   }, []);
 
-  return { habits, sync, addHabit, renameHabit, removeHabit, toggleDay };
+  return { habits, sync, addHabit, renameHabit, removeHabit, toggleDay, moveHabit };
 }
 
 // Today's date key, kept current across midnight and when the tab regains focus.

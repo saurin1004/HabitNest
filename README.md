@@ -1,17 +1,17 @@
 # 🪺 HabitNest
 
-**A small, focused habit tracker for building a morning routine.** Check off habits each day, keep your streaks alive and see the last week at a glance. Use it instantly as a guest, or sign in to sync your habits across devices.
+**A small, focused habit tracker for building a daily routine.** Check off habits each day, keep your streaks alive and see the last week at a glance. Use it instantly as a guest, or sign in to sync your habits across devices.
 
 **[Live demo →](https://saurin1004.github.io/HabitNest/)**
 
-![HabitNest screenshot](docs/habitnest-app.png)
+![HabitNest screenshot](docs/habitnest-daily-routine.png)
 
 ## Features
 
 - **Daily check-ins** with a progress ring for today. The day rolls over at local midnight.
 - **Streaks:** current and best streak for every habit. A streak stays alive until the day ends, so it doesn't break at breakfast.
 - **7-day history:** tap any day in the week row to fill in a missed check-in.
-- **Your habits:** add, rename (✎) and delete (✕). It starts with five morning habits.
+- **Your habits:** add, rename (✎), delete (✕) and drag (⠿) to reorder, with mouse, touch or keyboard (focus the handle, press space, then use the arrow keys). Your order syncs with your account.
 - **Stats:** 7-day completion rate, longest active streak, best streak ever and total check-ins.
 - **Guest mode:** no sign-up. Progress is saved in `localStorage` and degrades gracefully in private browsing.
 - **Accounts and sync:** sign in with Google, or with email and password (verification email and password reset included). Habits sync across devices in real time through Firestore and work offline. Guest progress is merged into your account the first time you sign in.
