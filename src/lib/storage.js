@@ -8,13 +8,16 @@ export const DEFAULT_HABITS = [
   "Plan the day",
 ];
 
-export function makeHabit(name) {
+export function makeHabit(name, id) {
   return {
-    id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()),
+    id: id || (crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random())),
     name: name.trim(),
     completions: [],
   };
 }
+
+// Starter habits get stable ids so they line up across devices when merged.
+export const starterHabits = () => DEFAULT_HABITS.map((name, i) => makeHabit(name, `starter-${i + 1}`));
 
 export function loadHabits() {
   try {
@@ -26,7 +29,7 @@ export function loadHabits() {
   } catch {
     // Storage blocked or corrupted: fall back to the starter habits.
   }
-  return DEFAULT_HABITS.map(makeHabit);
+  return starterHabits();
 }
 
 export function saveHabits(habits) {
@@ -34,5 +37,14 @@ export function saveHabits(habits) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ habits }));
   } catch {
     // Storage unavailable (private mode, quota): progress lasts for this visit.
+  }
+}
+
+// After guest data has been merged into an account it no longer belongs on this device.
+export function clearGuestHabits() {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch {
+    // ignore
   }
 }

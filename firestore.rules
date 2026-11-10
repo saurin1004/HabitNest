@@ -1,0 +1,37 @@
+rules_version = '2';
+
+// HabitNest stores one document per user at /users/{uid}:
+//   { habits: [ { id, name, completions: ["YYYY-MM-DD", ...] }, ... ], updatedAt }
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /users/{uid} {
+      // Only the signed-in owner, with a verified email (Google accounts are
+      // always verified), can touch their own document.
+      function isOwner() {
+        return request.auth != null
+          && request.auth.uid == uid
+          && request.auth.token.email_verified == true;
+      }
+
+      // Writes must have exactly the expected shape, a bounded number of
+      // habits, and a server-set timestamp (clients can't backdate it).
+      function isValidWrite() {
+        let data = request.resource.data;
+        return data.keys().hasOnly(['habits', 'updatedAt'])
+          && data.keys().hasAll(['habits', 'updatedAt'])
+          && data.habits is list
+          && data.habits.size() <= 100
+          && data.updatedAt == request.time;
+      }
+
+      allow read, delete: if isOwner();
+      allow create, update: if isOwner() && isValidWrite();
+    }
+
+    // Everything else is closed.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

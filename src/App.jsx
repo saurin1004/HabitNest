@@ -2,16 +2,26 @@ import Header from "./components/Header.jsx";
 import HabitRow from "./components/HabitRow.jsx";
 import AddHabit from "./components/AddHabit.jsx";
 import Stats from "./components/Stats.jsx";
+import Account, { VerifyBanner } from "./components/Account.jsx";
 import { useHabits, useToday } from "./hooks/useHabits.js";
+import { useAccount } from "./hooks/useAccount.js";
 
 export default function App() {
   const today = useToday();
-  const { habits, addHabit, renameHabit, removeHabit, toggleDay } = useHabits();
+  const account = useAccount();
+  const uid = account.status === "signed-in" ? account.user.uid : null;
+  const { habits, sync, addHabit, renameHabit, removeHabit, toggleDay } = useHabits(uid);
   const doneToday = habits.filter((h) => h.completions.includes(today)).length;
 
   return (
     <div className="app">
-      <Header today={today} doneToday={doneToday} total={habits.length} />
+      <Header
+        today={today}
+        doneToday={doneToday}
+        total={habits.length}
+        accountSlot={<Account account={account} sync={sync} />}
+      />
+      <VerifyBanner account={account} />
 
       <main>
         <section className="card">
@@ -44,7 +54,12 @@ export default function App() {
       </main>
 
       <footer className="footer">
-        Your progress is saved in this browser. Built by{" "}
+        {uid
+          ? "Your habits are saved to your account and sync across devices."
+          : account.status === "disabled"
+          ? "Your progress is saved in this browser."
+          : "Your progress is saved in this browser. Sign in to sync it across devices."}{" "}
+        Built by{" "}
         <a href="https://saurin1004.github.io" target="_blank" rel="noreferrer">
           Saurin Prajapati
         </a>

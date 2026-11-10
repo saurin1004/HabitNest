@@ -11,22 +11,30 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint .",
-    "test": "vitest run"
+    "test": "vitest run src",
+    "test:rules": "firebase emulators:exec --only firestore --project demo-habitnest \"node --test tests/firestore.rules.test.mjs\""
   },
   "dependencies": {
+    "firebase": "^12.19.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
+    "@firebase/rules-unit-testing": "^5.0.2",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9.22.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
+    "firebase-tools": "^15.35.0",
     "globals": "^16.0.0",
     "vite": "^6.3.1",
     "vitest": "^3.2.7"
+  },
+  "overrides": {
+    "@firebase/app": "0.16.2",
+    "@firebase/app-compat": "0.5.18"
   }
 }

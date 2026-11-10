@@ -24,13 +24,16 @@ function ProgressRing({ done, total }) {
   );
 }
 
-export default function Header({ today, doneToday, total }) {
+export default function Header({ today, doneToday, total, accountSlot }) {
   const allDone = total > 0 && doneToday === total;
   return (
     <header className="header">
-      <div className="brand">
-        <span className="brand-mark" aria-hidden="true">🪺</span>
-        <span>HabitNest</span>
+      <div className="topbar">
+        <div className="brand">
+          <span className="brand-mark" aria-hidden="true">🪺</span>
+          <span>HabitNest</span>
+        </div>
+        {accountSlot}
       </div>
       <div className="today">
         <div>
