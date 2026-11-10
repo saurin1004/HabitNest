@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { loadCloud } from "../hooks/useAccount.js";
+import { isDeviceLinked } from "../lib/storage.js";
 
 const ERRORS = {
   "auth/invalid-email": "That email address doesn't look right.",
@@ -264,6 +265,19 @@ export function VerifyBanner({ account }) {
           Sign out
         </button>
         {note && <span className="muted">{note}</span>}
+      </span>
+    </div>
+  );
+}
+
+// Shown after signing out on a browser that has been linked to an account.
+export function SignedOutBanner({ account }) {
+  if (account.status !== "signed-out" || !isDeviceLinked()) return null;
+  return (
+    <div className="banner" role="status">
+      <span>
+        You're signed out. <strong>Your habits are safe in your account</strong>; sign in to see them. Changes
+        made while signed out stay on this device only.
       </span>
     </div>
   );

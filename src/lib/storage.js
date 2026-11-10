@@ -16,7 +16,7 @@ export function makeHabit(name, id) {
   };
 }
 
-// Starter habits get stable ids so they line up across devices when merged.
+// Starter habits get stable ids.
 export const starterHabits = () => DEFAULT_HABITS.map((name, i) => makeHabit(name, `starter-${i + 1}`));
 
 export function loadHabits() {
@@ -40,11 +40,31 @@ export function saveHabits(habits) {
   }
 }
 
-// After guest data has been merged into an account it no longer belongs on this device.
+// Once an account is in use on this device, guest data is cleared from it.
 export function clearGuestHabits() {
   try {
     localStorage.removeItem(STORAGE_KEY);
   } catch {
     // ignore
+  }
+}
+
+// Remembers that this browser has been signed in to an account before, so the
+// signed-out screen can explain that the account's habits are safe.
+const LINKED_KEY = "habitnest:linked";
+
+export function markDeviceLinked() {
+  try {
+    localStorage.setItem(LINKED_KEY, "1");
+  } catch {
+    // ignore
+  }
+}
+
+export function isDeviceLinked() {
+  try {
+    return localStorage.getItem(LINKED_KEY) === "1";
+  } catch {
+    return false;
   }
 }

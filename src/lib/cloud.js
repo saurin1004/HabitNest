@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app";
 import {
   GoogleAuthProvider,
+  connectAuthEmulator,
   createUserWithEmailAndPassword,
   deleteUser,
   getAuth,
@@ -13,17 +14,14 @@ import {
   signOut,
 } from "firebase/auth";
 import {
+  connectFirestoreEmulator,
   deleteDoc,
-  doc,
-  getDoc,
   initializeFirestore,
-  onSnapshot,
   persistentLocalCache,
   persistentMultipleTabManager,
-  serverTimestamp,
-  setDoc,
 } from "firebase/firestore";
 import { firebaseConfig } from "./config.js";
+import * as sync from "./sync.js";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -32,7 +30,13 @@ const db = initializeFirestore(app, {
   localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
 });
 
-const userDoc = (uid) => doc(db, "users", uid);
+// Local development and testing against the Firebase emulators.
+if (import.meta.env.VITE_FIREBASE_EMULATORS === "1") {
+  connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
+  connectFirestoreEmulator(db, "127.0.0.1", 8080);
+}
+
+const userDoc = (uid) => sync.userRef(db, uid);
 
 export const onUser = (callback) => onAuthStateChanged(auth, callback);
 
@@ -60,19 +64,10 @@ export const resetPassword = (email) => sendPasswordResetEmail(auth, email);
 
 export const logOut = () => signOut(auth);
 
-export async function fetchHabits(uid) {
-  const snap = await getDoc(userDoc(uid));
-  return snap.exists() ? snap.data().habits : null;
-}
-
-export const writeHabits = (uid, habits) =>
-  setDoc(userDoc(uid), { habits, updatedAt: serverTimestamp() });
-
-// Calls back with (habits, hasPendingWrites) whenever the stored habits change.
-export const watchHabits = (uid, callback) =>
-  onSnapshot(userDoc(uid), { includeMetadataChanges: true }, (snap) => {
-    if (snap.exists()) callback(snap.data().habits, snap.metadata.hasPendingWrites);
-  });
+export const readHabits = (uid) => sync.readHabits(db, uid);
+export const writeAll = (uid, habits) => sync.writeAll(db, uid, habits);
+export const sendChange = (uid, change) => sync.sendChange(db, uid, change);
+export const watchHabits = (uid, callback, onError) => sync.watchHabits(db, uid, callback, onError);
 
 // Deletes the user's data first, then the account itself.
 export async function deleteAccount() {

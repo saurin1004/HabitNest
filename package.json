@@ -12,7 +12,7 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "test": "vitest run src",
-    "test:rules": "firebase emulators:exec --only firestore --project demo-habitnest \"node --test tests/firestore.rules.test.mjs\""
+    "test:rules": "firebase emulators:exec --only firestore --project demo-habitnest \"node --test --test-concurrency=1 tests/firestore.rules.test.mjs tests/sync.test.mjs\""
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

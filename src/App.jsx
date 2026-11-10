@@ -13,7 +13,7 @@ import Header from "./components/Header.jsx";
 import HabitRow from "./components/HabitRow.jsx";
 import AddHabit from "./components/AddHabit.jsx";
 import Stats from "./components/Stats.jsx";
-import Account, { VerifyBanner } from "./components/Account.jsx";
+import Account, { SignedOutBanner, VerifyBanner } from "./components/Account.jsx";
 import { useHabits, useToday } from "./hooks/useHabits.js";
 import { useAccount } from "./hooks/useAccount.js";
 
@@ -46,6 +46,7 @@ export default function App() {
         accountSlot={<Account account={account} sync={sync} />}
       />
       <VerifyBanner account={account} />
+      <SignedOutBanner account={account} />
 
       <main>
         <section className="card">

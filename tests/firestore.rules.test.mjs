@@ -9,7 +9,7 @@ import {
 import { deleteDoc, doc, getDoc, serverTimestamp, setDoc, Timestamp } from "firebase/firestore";
 
 let env;
-const habits = [{ id: "a", name: "Workout", completions: ["2026-03-10"] }];
+const habits = { a: { name: "Workout", order: 0, completions: ["2026-03-10"] } };
 const valid = () => ({ habits, updatedAt: serverTimestamp() });
 
 const alice = () => env.authenticatedContext("alice", { email_verified: true }).firestore();
@@ -69,12 +69,22 @@ describe("write validation", () => {
   it("rejects a missing habits list", async () => {
     await assertFails(setDoc(ref(), { updatedAt: serverTimestamp() }));
   });
-  it("rejects habits that aren't a list", async () => {
+  it("rejects habits that aren't a map", async () => {
     await assertFails(setDoc(ref(), { habits: "nope", updatedAt: serverTimestamp() }));
   });
+  it("rejects the old list format", async () => {
+    await assertFails(setDoc(ref(), { habits: [{ id: "a", name: "x", completions: [] }], updatedAt: serverTimestamp() }));
+  });
   it("rejects more than 100 habits", async () => {
-    const many = Array.from({ length: 101 }, (_, i) => ({ id: String(i), name: "x", completions: [] }));
+    const many = Object.fromEntries(Array.from({ length: 101 }, (_, i) => [`h${i}`, { name: "x", order: i, completions: [] }]));
     await assertFails(setDoc(ref(), { habits: many, updatedAt: serverTimestamp() }));
+  });
+  it("allows converting an old list-format document to the map format", async () => {
+    await env.withSecurityRulesDisabled((ctx) =>
+      setDoc(doc(ctx.firestore(), "users/alice"), { habits: [{ id: "a", name: "x", completions: [] }], updatedAt: serverTimestamp() })
+    );
+    await assertSucceeds(getDoc(ref()));
+    await assertSucceeds(setDoc(ref(), valid()));
   });
   it("rejects client-chosen timestamps", async () => {
     await assertFails(setDoc(ref(), { habits, updatedAt: Timestamp.fromDate(new Date(2020, 0, 1)) }));

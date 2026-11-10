@@ -1,7 +1,8 @@
 rules_version = '2';
 
 // HabitNest stores one document per user at /users/{uid}:
-//   { habits: [ { id, name, completions: ["YYYY-MM-DD", ...] }, ... ], updatedAt }
+//   { habits: { <habitId>: { name, order, completions: ["YYYY-MM-DD", ...] }, ... }, updatedAt }
+// Habits are a map keyed by id so each change updates only its own fields.
 service cloud.firestore {
   match /databases/{database}/documents {
 
@@ -20,7 +21,7 @@ service cloud.firestore {
         let data = request.resource.data;
         return data.keys().hasOnly(['habits', 'updatedAt'])
           && data.keys().hasAll(['habits', 'updatedAt'])
-          && data.habits is list
+          && data.habits is map
           && data.habits.size() <= 100
           && data.updatedAt == request.time;
       }
